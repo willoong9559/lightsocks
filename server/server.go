@@ -50,22 +50,26 @@ func (l *LsServer) handler(rconn *net.TCPConn) {
 
 	_, err := l.DecodeRead(rconn, buf)
 	if err != nil || buf[0] != 0x05 {
-		log.Printf("不支持的socks版本: %v", buf[0])
+		log.Printf("不支持的socks版本: %v\n", buf[0])
 		return
 	}
 	_, err = l.EncodeWrite(rconn, []byte{0x05, 0x00})
 	if err != nil {
-		log.Printf("写入socks5响应失败")
+		log.Println("socks5响应失败")
 		return
 	}
 
-	n, _ := l.DecodeRead(rconn, buf)
+	n, err := l.DecodeRead(rconn, buf)
+	if err != nil {
+		log.Println("二次DecodeRead failed", err)
+		return
+	}
 	if buf[1] != 0x01 {
-		// 目前只支持 CONNECT
+		log.Println("只支持connect方法")
 		return
 	}
 
-	dstAddr, err := GerSocksDstAddr(buf, n)
+	dstAddr, err := GetSocksDstAddr(buf, n)
 	if err != nil {
 		log.Print(err)
 		return

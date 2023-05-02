@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-func GerSocksDstAddr(buf []byte, n int) (*net.TCPAddr, error) {
+func GetSocksDstAddr(buf []byte, n int) (*net.TCPAddr, error) {
 	var dIP []byte
 	// aType 代表请求的远程服务器地址类型，值长度1个字节，有三种类型
 	switch buf[3] {

@@ -43,8 +43,9 @@ func (l *LsClient) Listen() error {
 
 func (l *LsClient) handler(rconn *net.TCPConn) {
 	defer rconn.Close()
-	dconn, err := common.DialTCP(l.ListenAddr, l.RemoteAddr)
+	dconn, err := common.DialTCP(l.RemoteAddr)
 	if err != nil {
+		log.Panic(err)
 		return
 	}
 	// Conn被关闭时直接清除所有数据 不管没有发送的数据
@@ -55,6 +56,7 @@ func (l *LsClient) handler(rconn *net.TCPConn) {
 		err := l.DecodeCopy(rconn, dconn)
 		if err != nil {
 			log.Println(err)
+			rconn.Close()
 			dconn.Close()
 			return
 		}

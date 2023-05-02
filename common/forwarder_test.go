@@ -52,6 +52,6 @@ func TestEncodeWriteAndDecodeRead(t *testing.T) {
 		t.Errorf("encode len != decode len: nw = %d, dr = %d", nw, dr)
 	}
 	if !bytes.Equal(text1, text2[:dr]) {
-		t.Error("TestEncodeWriteAndDecodeRead failed")
+		t.Errorf("text1=%s, text2=%s", string(text), string(text2))
 	}
 }

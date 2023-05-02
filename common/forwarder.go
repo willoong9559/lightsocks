@@ -61,7 +61,7 @@ func (f *Forwarder) EncodeCopy(dst io.Writer, rst io.Reader) error {
 			}
 		}
 		if readCount > 0 {
-			writeCount, err := f.EncodeWrite(dst, buf)
+			writeCount, err := f.EncodeWrite(dst, buf[:readCount])
 			if err != nil {
 				return err
 			}
