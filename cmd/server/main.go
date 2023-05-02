@@ -3,13 +3,17 @@ package main
 import (
 	"log"
 
+	"github.com/willoong9559/lightsocks/common"
+	"github.com/willoong9559/lightsocks/conf"
 	"github.com/willoong9559/lightsocks/server"
 )
 
 func main() {
-	LsServer, err := server.NewLsServer()
+	conf.InitConfS()
+	lsServer, err := server.NewLsServer()
 	if err != nil {
 		log.Panic(err)
 	}
-	log.Fatal(LsServer.Listen())
+	common.PrintInfo(lsServer)
+	log.Fatal(lsServer.Listen())
 }

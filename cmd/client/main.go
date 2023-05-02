@@ -4,12 +4,16 @@ import (
 	"log"
 
 	"github.com/willoong9559/lightsocks/client"
+	"github.com/willoong9559/lightsocks/common"
+	"github.com/willoong9559/lightsocks/conf"
 )
 
 func main() {
-	Lsclient, err := client.NewLsClient()
+	conf.InitConfC()
+	lsClient, err := client.NewLsClient()
 	if err != nil {
 		log.Panic(err)
 	}
-	log.Fatal(Lsclient.Listen())
+	common.PrintInfo(lsClient)
+	log.Fatal(lsClient.Listen())
 }

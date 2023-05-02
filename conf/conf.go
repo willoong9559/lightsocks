@@ -19,13 +19,33 @@ var (
 	Version    bool
 )
 
-func InitConf() {
+func InitConfC() {
+	InitConf("client")
+	if ServerAddr == "" {
+		log.Fatalf("Invalid emtpy server address.\n")
+	}
+}
+
+func InitConfS() {
+	InitConf("server")
+	if ServerAddr != "" {
+		log.Println("ignore ServerAddr")
+		ServerAddr = ""
+	}
+	if Psk == "" {
+		randPsk := common.NewRandPasswdStr()
+		log.Printf("psk not found, generate new: %s", randPsk)
+		Psk = randPsk
+	}
+}
+
+func InitConf(secName string) {
 	flag.StringVar(&ConfigFile, "c", "", "configuration file path")
 	flag.StringVar(&ListenAddr, "l", "0.0.0.0:18888", "client listen address like \"0.0.0.0:18888\"")
 	flag.StringVar(&ServerAddr, "s", "", "server address(server only)")
 	flag.StringVar(&Psk, "k", "", "pre-shared key")
-	flag.BoolVar(&GenPsk, "genpsk", false, "generate psk")
-	flag.BoolVar(&Version, "version", false, "show open-snell version")
+	flag.BoolVar(&GenPsk, "g", false, "generate psk")
+	flag.BoolVar(&Version, "version", false, "show version")
 
 	flag.Parse()
 	flag.Set("logtostderr", "true")
@@ -35,29 +55,25 @@ func InitConf() {
 		os.Exit(0)
 	}
 
-	log.Printf("psk: %s\n", common.NewRandPasswdStr())
-	if Version {
+	if GenPsk {
+		log.Printf("psk: %s\n", common.NewRandPasswdStr())
 		os.Exit(0)
 	}
 
 	if ConfigFile != "" {
 		log.Println("Configuration file specified, ignoring other flags")
+		var sec *ini.Section
 		cfg, err := ini.Load(ConfigFile)
 		if err != nil {
 			log.Fatalf("Failed to load config file %s, %v\n", ConfigFile, err)
 		}
-		sec, err := cfg.GetSection("client")
+		sec, err = cfg.GetSection(secName)
 		if err != nil {
-			log.Fatalf("Section 'client' not found in config file %s\n", ConfigFile)
+			log.Fatalf("Section '%s' not found in config file %s\n", secName, ConfigFile)
 		}
-
 		ListenAddr = sec.Key("listen").String()
 		ServerAddr = sec.Key("server").String()
 		Psk = sec.Key("psk").String()
-	}
-
-	if ServerAddr == "" {
-		log.Fatalf("Invalid emtpy server address.\n")
 	}
 }
 

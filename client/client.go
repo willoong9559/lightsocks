@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -58,4 +59,14 @@ func (l *LsClient) handler(rconn *net.TCPConn) {
 		}
 	}()
 	l.EncodeCopy(dconn, rconn)
+}
+
+func (l *LsClient) PrintInfo() {
+	info := fmt.Sprintf(`
+客户端启动成功，配置如下：
+本地监听地址：
+%s
+远程服务地址：
+%s`, conf.ListenAddr, conf.ServerAddr)
+	log.Println(info)
 }

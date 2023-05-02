@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net"
 
@@ -92,4 +93,12 @@ func (l *LsServer) handler(rconn *net.TCPConn) {
 		}
 	}()
 	l.EncodeCopy(rconn, dconn)
+}
+
+func (l *LsServer) PrintInfo() {
+	info := fmt.Sprintf(`
+服务端启动成功，配置如下：
+本地监听地址：
+%s`, conf.ListenAddr)
+	log.Println(info)
 }
