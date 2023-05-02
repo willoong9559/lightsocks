@@ -24,13 +24,14 @@ func NewLsClient(listenAddr, remoteAddr, password string) (*LsClient, error) {
 }
 
 func (l *LsClient) Listen() error {
-	listener, err := getTcpListener(l.ListenAddr)
+	listener, err := common.GetTcpListener(l.ListenAddr)
 	if err != nil {
 		return err
 	}
 	for {
 		conn, err := listener.AcceptTCP()
 		if err != nil {
+			log.Print(err)
 			continue
 		}
 		go l.handler(conn)
@@ -39,9 +40,8 @@ func (l *LsClient) Listen() error {
 
 func (l *LsClient) handler(rconn *net.TCPConn) {
 	defer rconn.Close()
-	dconn, err := DialTCP(l.ListenAddr, l.RemoteAddr)
+	dconn, err := common.DialTCP(l.ListenAddr, l.RemoteAddr)
 	if err != nil {
-		log.Println(err)
 		return
 	}
 	// Conn被关闭时直接清除所有数据 不管没有发送的数据
@@ -56,32 +56,4 @@ func (l *LsClient) handler(rconn *net.TCPConn) {
 		}
 	}()
 	l.EncodeCopy(dconn, rconn)
-}
-
-func getTcpListener(listenAddr string) (*net.TCPListener, error) {
-	structListenAddr, err := net.ResolveTCPAddr("tcp", listenAddr)
-	if err != nil {
-		return nil, err
-	}
-	listener, err := net.ListenTCP("tcp", structListenAddr)
-	if err != nil {
-		return nil, err
-	}
-	return listener, nil
-}
-
-func DialTCP(listenAddr, remoteAddr string) (*net.TCPConn, error) {
-	structListenAddr, err := net.ResolveTCPAddr("tcp", listenAddr)
-	if err != nil {
-		panic(err)
-	}
-	structRemoteAddr, err := net.ResolveTCPAddr("tcp", remoteAddr)
-	if err != nil {
-		panic(err)
-	}
-	dconn, err := net.DialTCP("tcp", structListenAddr, structRemoteAddr)
-	if err != nil {
-		return nil, err
-	}
-	return dconn, err
 }

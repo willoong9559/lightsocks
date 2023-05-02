@@ -10,6 +10,6 @@ func NewClientConfig(listenAddr, remoteAddr, password string) *Config {
 	return &Config{listenAddr, remoteAddr, password}
 }
 
-func NewServerConfig(listenAddr, remoteAddr string) *Config {
+func NewServerConfig(listenAddr, remoteAddr, password string) *Config {
 	return &Config{listenAddr, remoteAddr, NewRandPasswdStr()}
 }

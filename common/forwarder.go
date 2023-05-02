@@ -38,8 +38,8 @@ func (f *Forwarder) EncodeWrite(dst io.Writer, buf []byte) (int, error) {
 }
 
 func (f *Forwarder) EncodeCopy(dst io.Writer, rst io.Reader) error {
-	buf := bufferPoolGet()
-	defer bufferPoolPut(buf)
+	buf := BufferPoolGet()
+	defer BufferPoolPut(buf)
 	for {
 		readCount, errRead := rst.Read(buf)
 		if errRead != nil {
@@ -75,8 +75,8 @@ func (f *Forwarder) DecodeRead(rst io.Reader, buf []byte) (int, error) {
 }
 
 func (f *Forwarder) DecodeCopy(dst io.Writer, rst io.Reader) error {
-	buf := bufferPoolGet()
-	defer bufferPoolPut(buf)
+	buf := BufferPoolGet()
+	defer BufferPoolPut(buf)
 
 	for {
 		readCount, errRead := f.DecodeRead(rst, buf)

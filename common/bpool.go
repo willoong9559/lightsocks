@@ -15,9 +15,9 @@ func init() {
 		return make([]byte, bufSize)
 	}
 }
-func bufferPoolGet() []byte {
+func BufferPoolGet() []byte {
 	return bpool.Get().([]byte)
 }
-func bufferPoolPut(b []byte) {
+func BufferPoolPut(b []byte) {
 	bpool.Put(b)
 }
