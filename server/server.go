@@ -88,8 +88,9 @@ func (l *LsServer) handler(rconn *net.TCPConn) {
 	go func() {
 		err := l.DecodeCopy(dconn, rconn)
 		if err != nil {
-			rconn.Close()
+			log.Println(err)
 			dconn.Close()
+			return
 		}
 	}()
 	l.EncodeCopy(rconn, dconn)

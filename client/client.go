@@ -54,6 +54,7 @@ func (l *LsClient) handler(rconn *net.TCPConn) {
 	go func() {
 		err := l.DecodeCopy(rconn, dconn)
 		if err != nil {
+			log.Println(err)
 			dconn.Close()
 			return
 		}
