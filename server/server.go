@@ -5,21 +5,23 @@ import (
 	"net"
 
 	"github.com/willoong9559/lightsocks/common"
+	"github.com/willoong9559/lightsocks/conf"
 )
 
 type LsServer struct {
-	*common.Config
+	*conf.Config
 	*common.Forwarder
 }
 
-func NewLsServer(listenAddr, remoteAddr, password string) (*LsServer, error) {
-	lsPassword, err := common.Atp(password)
+func NewLsServer() (*LsServer, error) {
+	config := conf.NewConfig()
+	forwarder, err := common.NewForwarderWithStr(config.Password)
 	if err != nil {
 		return nil, err
 	}
 	return &LsServer{
-		Config:    common.NewServerConfig(listenAddr, remoteAddr, password),
-		Forwarder: common.NewForWarder(lsPassword),
+		Config:    config,
+		Forwarder: forwarder,
 	}, nil
 }
 

@@ -29,7 +29,7 @@ func NewRandPasswdStr() string {
 	return Pta(NewRandPassword())
 }
 
-func GetDecodePasswdStr(lspasswd *Lspasswd) *Lspasswd {
+func GetDecodePasswd(lspasswd *Lspasswd) *Lspasswd {
 	encodePasswd := new(Lspasswd)
 	for i, v := range lspasswd {
 		encodePasswd[v] = byte(i)

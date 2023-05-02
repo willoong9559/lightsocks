@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	LsServer, err := server.NewLsServer("", "", "")
+	LsServer, err := server.NewLsServer()
 	if err != nil {
 		log.Panic(err)
 	}

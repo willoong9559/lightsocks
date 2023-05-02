@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	Lsclient, err := client.NewLsClient("", "", "")
+	Lsclient, err := client.NewLsClient()
 	if err != nil {
 		log.Panic(err)
 	}

@@ -9,11 +9,22 @@ type Forwarder struct {
 	decodePassword *Lspasswd
 }
 
-func NewForWarder(password *Lspasswd) *Forwarder {
+func NewForwarder(password *Lspasswd) *Forwarder {
 	return &Forwarder{
 		encodePassword: password,
-		decodePassword: GetDecodePasswdStr(password),
+		decodePassword: GetDecodePasswd(password),
 	}
+}
+
+func NewForwarderWithStr(passwordStr string) (*Forwarder, error) {
+	password, err := Atp(passwordStr)
+	if err != nil {
+		return nil, err
+	}
+	return &Forwarder{
+		encodePassword: password,
+		decodePassword: GetDecodePasswd(password),
+	}, nil
 }
 
 func (f *Forwarder) Encode(bs []byte) {
